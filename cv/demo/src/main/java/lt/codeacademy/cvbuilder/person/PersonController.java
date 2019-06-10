@@ -1,18 +1,33 @@
 package lt.codeacademy.cvbuilder.person;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/person")
 
 public class PersonController {
 
-    @GetMapping(path = "/info")
-    public  Person getPersonInfo(){
-        return new
-                Person("Vytautas","Pavardis","Java developer");
+    private  final PersonService personService;
 
+    @Autowired
+    public  PersonController (PersonService personService) {
+        this.personService = personService;
     }
+
+        @GetMapping(path = "/info")
+                public Person getPersonInfo() throws NotFoundException {
+            return personService.getPerson();
+        }
+        @PostMapping(path = "/add")
+    public void addPerson(@RequestBody Person person){
+        this.personService.setPerson(person);
+        }
+        @PutMapping(path = "/updatePerson")
+        public void  updatePersonInfo(@RequestBody Person person){
+            this.personService.updatePerson(person);
+        }
+
+
 }
